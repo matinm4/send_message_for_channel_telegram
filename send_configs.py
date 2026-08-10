@@ -10,7 +10,9 @@ from telethon.sessions import StringSession
 FILE_TO_CHANNEL = {
     "top20.txt": "@ApexConfigVpn",      # کانال اول شما
     "batch_01.txt": "@QuantumConfigX",   # کانال دوم شما
-    "batch_02.txt": "@HyperConfigPro",   # کانال سوم شما
+    "batch_02.txt": "@HyperConfigPro", 
+    "batch_03.txt": "@HyperConfigPro",
+    # کانال سوم شما
     # شما می‌توانید بقیه فایل‌ها مثل batch_03 تا batch_10 را هم به همین شکل اضافه کنید
 }
 
