@@ -9,9 +9,9 @@ from telethon.sessions import StringSession
 # در این بخش می‌توانید به راحتی تعیین کنید که هر فایل به کدام کانال ارسال شود.
 # می‌توانید آیدی عددی کانال (مثل -100123456) یا یوزرنیم کانال (مثل @my_channel) را وارد کنید.
 FILE_TO_CHANNEL = {
-    "top20.txt": "@your_channel_1",      # کانال اول شما
-    "batch_01.txt": "@your_channel_2",   # کانال دوم شما
-    "batch_02.txt": "@your_channel_3",   # کانال سوم شما
+    "top20.txt": "@ApexConfigVpn",      # کانال اول شما
+    "batch_01.txt": "@QuantumConfigX",   # کانال دوم شما
+    "batch_02.txt": "@HyperConfigPro",   # کانال سوم شما
     # شما می‌توانید بقیه فایل‌ها مثل batch_03 تا batch_10 را هم به همین شکل اضافه کنید
     # "batch_03.txt": "@your_channel_3",
 }
