@@ -7,13 +7,11 @@ from telethon.sessions import StringSession
 
 # کانفیگ فایل‌ها و کانال‌های تلگرامی
 # در این بخش می‌توانید به راحتی تعیین کنید که هر فایل به کدام کانال ارسال شود.
-# می‌توانید آیدی عددی کانال (مثل -100123456) یا یوزرنیم کانال (مثل @my_channel) را وارد کنید.
 FILE_TO_CHANNEL = {
     "top20.txt": "@ApexConfigVpn",      # کانال اول شما
     "batch_01.txt": "@QuantumConfigX",   # کانال دوم شما
     "batch_02.txt": "@HyperConfigPro",   # کانال سوم شما
     # شما می‌توانید بقیه فایل‌ها مثل batch_03 تا batch_10 را هم به همین شکل اضافه کنید
-    # "batch_03.txt": "@your_channel_3",
 }
 
 # دریافت اطلاعات احراز هویت از Environment Variables (تنظیم شده در GitHub Secrets)
@@ -33,20 +31,34 @@ async def send_in_chunks(client, channel, configs):
     ارسال کانفیگ‌ها به تلگرام.
     محدودیت هر پیام در تلگرام ۴۰۹۶ کاراکتر است، این تابع پیام‌های طولانی را می‌شکند.
     """
-    chunk = ""
+    chunk_configs = []
+    current_length = 0
+    
+    # قالب‌بندی هدر (شروع کد بلاک) و فوتر (پایان کد بلاک + آیدی کانال)
+    header = "```\n"
+    footer = f"\n```\n\n🆔 **Channel:** {channel}"
+    
     for config in configs:
-        # قرار دادن کانفیگ در تگ کد برای کپی راحت‌تر توسط کاربران
-        formatted_config = f"```\n{config}\n```\n\n"
+        config_len = len(config) + 1 # +1 برای فاصله خط جدید (\n)
         
-        if len(chunk) + len(formatted_config) > 4000:
-            await client.send_message(channel, chunk, parse_mode='md')
-            chunk = formatted_config
+        # بررسی محدودیت کاراکتر تلگرام (محاسبه طول کانفیگ‌ها + هدر + فوتر)
+        if current_length + config_len + len(header) + len(footer) > 4000:
+            # چسباندن تمام کانفیگ‌های این بخش به هم و ارسال به عنوان یک پیام واحد
+            message = header + "\n".join(chunk_configs) + footer
+            await client.send_message(channel, message)
             await asyncio.sleep(1.5) # جلوگیری از محدودیت ارسال تلگرام (Flood Wait)
-        else:
-            chunk += formatted_config
             
-    if chunk:
-        await client.send_message(channel, chunk, parse_mode='md')
+            # ریست کردن حافظه پیام برای بخش بعدی
+            chunk_configs = [config]
+            current_length = config_len
+        else:
+            chunk_configs.append(config)
+            current_length += config_len
+            
+    # اگر در انتها کانفیگی در حافظه مانده بود، آن را ارسال می‌کنیم
+    if chunk_configs:
+        message = header + "\n".join(chunk_configs) + footer
+        await client.send_message(channel, message)
 
 async def main():
     if not API_ID or not API_HASH or not SESSION_STRING:
